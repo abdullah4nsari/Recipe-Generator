@@ -21,8 +21,8 @@ const hf = new HfInference(process.env.ACCESS_TOKEN);
 app.post('/api/recipe', async (req, res) => {
     const { ingredients } = req.body;
     const ingredientsString = ingredients.join(", ");
-    
     try {
+        console.log("i am here");
         const response = await hf.chatCompletion({
             model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
             messages: [
@@ -31,6 +31,7 @@ app.post('/api/recipe', async (req, res) => {
             ],
             max_tokens: 1024,
         });
+        console.log(response);
         res.json({ recipe: response.choices[0].message.content });
     } catch (err) {
         console.error(err.message);
