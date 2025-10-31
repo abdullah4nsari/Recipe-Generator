@@ -1,0 +1,144 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Montserrat", sans-serif;
+}
+.mainLogo {
+  width: 70px;
+}
+header {
+  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+header > div {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Header-Title {
+  font-size: 25px;
+  font-weight: 500;
+  display: flex;
+  align-items: end;
+  text-wrap: nowrap;
+}
+.Navbar {
+  display: flex;
+  gap: 5px;
+  padding: 10px;
+  justify-content: center;
+}
+main{
+  margin: auto;
+  padding: 30px;
+}
+form{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+input[type="text"]{
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #D1D5DB;
+  flex-grow: 1;
+  max-width: 550px;
+  min-width: 150px;
+}
+#addIng{
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  text-wrap: nowrap;
+  background-color: #141413;
+  color: #FAFAF8;
+  font-size:0.875rem;
+}
+#addIng::before {
+  content: '+';
+  margin-right: 5px;
+  
+}
+ul{
+  padding: 10px 30px;
+}
+ol{
+  padding: 10px 30px;
+}
+ul li,ol li{
+  margin-top: 5px;
+  color: #475467;
+}
+ul li p,ol li p{
+  word-wrap: break-word;
+  width: 90%;
+}
+#main-container{
+  max-width: 700px;
+}
+li div{
+  display: flex;
+  justify-content: space-between;
+}
+h2{
+  margin-top: 20px;
+}
+.generateRecipe{
+  padding: 30px;
+  background-color: #F0EFEB;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.getARecipe{
+  background-color:#D17557;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+}
+.generateRecipe__title{
+  margin-bottom: 8px;
+}
+article p{
+  margin: 10px 0px;
+}
+.dishName{
+  margin-bottom: 10px;
+}
+
+/*practice box css */
+.box-container {
+  display: grid;
+  grid-template-columns: repeat(4, 100px); /* 4 boxes per row */
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  opacity: 0.5;
+  transform: scale(1);
+}
+
+/* Active (on = true) box */
+.box.on {
+  opacity: 1;
+  transform: scale(1.05);
+  border: 3px solid black;
+}
