@@ -19,5 +19,5 @@ Simply enter the ingredients you have, and the app suggests creative and delicio
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/<your-username>/ai-recipe-generator.git
+git clone https://github.com/abdullah4nsari/Recipe-Generator.git
 cd ai-recipe-generator
