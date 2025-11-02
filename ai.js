@@ -1,5 +1,5 @@
 export async function getRecipeFromMistral(ingredientsArr) {
-    const BASE_URL = import.meta.env.BASE_URL || "http://localhost:3001";
+    const BASE_URL = "https://recipe-generator-b2g2.onrender.com";
     try {
         const response = await fetch(`${BASE_URL}/api/recipe`, {
             method: 'POST',
