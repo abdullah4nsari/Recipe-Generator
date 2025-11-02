@@ -1,44 +1,71 @@
-import express from 'express';
-import cors from 'cors';
-import { HfInference } from '@huggingface/inference';
-import dotenv from 'dotenv';
-
+import { InferenceClient } from "@huggingface/inference";
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT||3001;
-
-app.use(cors());
 app.use(express.json());
+app.use(cors());
+app.post("/api/recipe", async (req, res) => {
+  const client = new InferenceClient(process.env.ACCESS_TOKEN);
 
-const SYSTEM_PROMPT = `
-You are an assistant that receives a list of ingredients that a user has and suggests a recipe they could make with some or all of those ingredients. You don't need to use every ingredient they mention in your recipe. The recipe can include few additional ingredients they didn't mention, but try not to include too many extra ingredients. Format your response in markdown to make it easier to render to a web page,
-only give recipe name and ingredients and instructions not any kind of supporting paragraph before or after these 3 things
+  const ingredients = req.body.ingredients;
+  // ...
+
+const prompt = `
+ROLE: You are a recipe assistant. Suggest a recipe using the following ingredients. You may add up to 2 common extra ingredients.
+
+AVAILABLE INGREDIENTS: ${ingredients.join(", ")}.
+
+OUTPUT FORMAT INSTRUCTIONS:
+STRICTLY follow this format and only use Markdown.
+DO NOT include any introductory or concluding text, or any explanation.
+
+The output MUST contain only these four elements, in this order:
+1. **Title, which MUST use a Level 1 Heading (#) AND be bolded (**Title**).** Example: **# **My Great Recipe****
+2. Ingredients list (using a bulleted list with quantities)
+3. Step-by-step instructions (using a numbered list)
+4. A short note or tip at the end (using a separator and text).
+
+BEGIN RECIPE OUTPUT.
 `;
 
-const hf = new HfInference(process.env.ACCESS_TOKEN);
+// ...
+  try {
+    const chatCompletion = await client.chatCompletion({
+      provider: "featherless-ai",
+      model: "HuggingFaceH4/zephyr-7b-beta",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      max_tokens: 1024,
+    });
+    function cleanModelOutput(chatCompletion) {
+  return chatCompletion
+    .replace(/\[INST\]/g, "")
+    .replace(/\[\/INST\]/g, "")
+    .replace(/\[ASS\]/g, "")
+    .replace(/\[\/ASS\]/g, "")
+    .replace(/<s>/g, "")
+    .replace(/<\/s>/g, "")
+    .trim();
+}
 
-app.post('/api/recipe', async (req, res) => {
-    const { ingredients } = req.body;
-    const ingredientsString = ingredients.join(", ");
-    try {
-        console.log("i am here");
-        const response = await hf.chatCompletion({
-            model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
-            messages: [
-                { role: "system", content: SYSTEM_PROMPT },
-                { role: "user", content: `I have ${ingredientsString}.Give me a recipe you'd recommend I make!` },
-            ],
-            max_tokens: 1024,
-        });
-        console.log(response);
-        res.json({ recipe: response.choices[0].message.content });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: "Failed to generate recipe" });
-    }
+// Example usage:
+const cleanText = cleanModelOutput(chatCompletion.choices[0].message.content);
+
+    res.json({ recipe: cleanText });
+  } catch (error) {
+    res.err(error);
+  }
 });
 
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+app.listen(5000, () => {
+  console.log("Server is running on port 5000");
 });
+
+// console.log(chatCompletion.choices[0].message);
